@@ -56,7 +56,7 @@ public class HBaseSinkTask extends SinkTask {
     @Override
     public void start(Map<String, String> props) {
         final HBaseSinkConfig sinkConfig = new HBaseSinkConfig(props);
-        sinkConfig.validate(); // we need to do some sanity checks of the properties we configure.
+        //sinkConfig.validate(); // we need to do some sanity checks of the properties we configure.
 
         final String zookeeperQuorum = sinkConfig.getString(HBaseSinkConfig.ZOOKEEPER_QUORUM_CONFIG);
         final Configuration configuration = HBaseConfiguration.create();

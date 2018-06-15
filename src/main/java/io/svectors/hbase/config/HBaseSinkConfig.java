@@ -70,7 +70,7 @@ public class HBaseSinkConfig extends AbstractConfig {
     /**
      * Validates the properties to ensure the rowkey property is configured for each table.
      */
-    public void validate() {
+ /*   public void validate() {
         final String topicsAsStr = properties.get(ConnectorConfig.TOPICS_CONFIG);
         final String[] topics = topicsAsStr.split(",");
         for(String topic : topics) {
@@ -79,7 +79,7 @@ public class HBaseSinkConfig extends AbstractConfig {
                 throw new ConfigException(String.format(" No rowkey has been configured for table [%s]", key));
             }
         }
-    }
+    }*/
 
     /**
      * Instantiates and return the event parser .
