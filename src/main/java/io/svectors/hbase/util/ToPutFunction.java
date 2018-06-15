@@ -68,7 +68,7 @@ public class ToPutFunction implements Function<SinkRecord, Put> {
         valuesMap.entrySet().stream().forEach(entry -> {
             final String qualifier = entry.getKey();
             final byte[] value = entry.getValue();
-            put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier), value);
+            put.add(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier), value);
         });
         return put;
     }

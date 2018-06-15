@@ -22,10 +22,8 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import io.svectors.hbase.HBaseClient;
-import io.svectors.hbase.HBaseConnectionFactory;
 import io.svectors.hbase.util.ToPutFunction;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
@@ -59,11 +57,9 @@ public class HBaseSinkTask extends SinkTask {
         //sinkConfig.validate(); // we need to do some sanity checks of the properties we configure.
 
         final String zookeeperQuorum = sinkConfig.getString(HBaseSinkConfig.ZOOKEEPER_QUORUM_CONFIG);
-        final Configuration configuration = HBaseConfiguration.create();
+        final Configuration configuration = org.apache.hadoop.hbase.HBaseConfiguration.create();
         configuration.set(HConstants.ZOOKEEPER_QUORUM, zookeeperQuorum);
-
-        final HBaseConnectionFactory connectionFactory = new HBaseConnectionFactory(configuration);
-        this.hBaseClient = new HBaseClient(connectionFactory);
+        this.hBaseClient = new HBaseClient();
         this.toPutFunction = new ToPutFunction(sinkConfig);
     }
 

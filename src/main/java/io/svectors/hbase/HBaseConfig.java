@@ -16,23 +16,21 @@
  * limitations under the License.
  */
 package io.svectors.hbase;
-
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 
 /**
- * @author ravi.magham
+ * @author Justin
  */
-public class HBaseConnectionFactory {
+public class HBaseConfig {
 
-    private final Configuration configuration;
-
-    public HBaseConnectionFactory(final Configuration configuration) {
-        this.configuration = configuration;
+    static Configuration conf = null;
+    public Configuration getConfiguration(){
+        conf = HBaseConfiguration.create();
+        conf.set("hbase.zookeeper.quorum","172.18.9.62");
+        conf.set("hbase.master","172.18.9.62:60010");
+        conf.set("zookeeper.znode.parent", "/hyperbase1");
+        return conf;
     }
 
-    public Connection getConnection() throws Exception {
-        return ConnectionFactory.createConnection(configuration);
-    }
 }

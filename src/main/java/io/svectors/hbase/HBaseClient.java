@@ -19,21 +19,26 @@ package io.svectors.hbase;
 
 import com.google.common.base.Preconditions;
 import io.svectors.hbase.sink.SinkConnectorException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.client.Row;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.BufferedMutator;
-import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author ravi.magham
+ * @author Justin
  */
 public final class HBaseClient {
 
-    private final HBaseConnectionFactory connectionFactory;
+    final private Configuration configuration;
 
-    public HBaseClient(final HBaseConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    public HBaseClient() {
+        HBaseConfig hbaseConfig = new HBaseConfig();
+        configuration = hbaseConfig.getConfiguration();
     }
 
     public void write(final String tableName, final List<Put> puts) {
@@ -46,10 +51,14 @@ public final class HBaseClient {
     public void write(final TableName table, final List<Put> puts) {
         Preconditions.checkNotNull(table);
         Preconditions.checkNotNull(puts);
-        try(final Connection connection = this.connectionFactory.getConnection();
-            final BufferedMutator mutator = connection.getBufferedMutator(table);) {
-            mutator.mutate(puts);
-            mutator.flush();
+        try ( final HTableInterface hTable = new HTable(configuration, table); )
+        {
+           // mutator.mutate(puts);
+           // mutator.flush();
+            List<Row> batch = new ArrayList<Row>();
+            puts.stream().forEach(put->batch.add(put)); //java8遍历 lambda方式
+            hTable.batch(batch);
+            batch.clear();
         } catch(Exception ex) {
             final String errorMsg = String.format("Failed with a [%s] when writing to table [%s] ", ex.getMessage(),
               table.getNameAsString());
